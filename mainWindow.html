@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <link rel='stylesheet' type='text/css' href='css/style.css'>
+    <script defer src="scripts/mainWindow.js"></script>
+    <title>Exercise Timer Application</title>
+</head>
+
+<body>
+    <div id="buttonContainer">
+        <button id="startTimer" class="buttons">Start Timer</button>
+        <button id="stopTimer" class="buttons">Stop Timer</button>
+        <button id="pausTimer" class="buttons">Pause Timer</button>
+    </div>
+    <input type="number" id="timerInput" />
+    <div id="setupContainer">
+        <div class="setupContainer_mini">
+            <p>Amount of Rounds</p>
+            <input type="number" id="rounds" />
+        </div>
+        <div class="setupContainer_mini">
+            <p>Amount of rest between exercises</p>
+            <input type="number" id="restTime" />
+        </div>
+        <div class="setupContainer_mini">
+            <p>Amount of time per exercise</p>
+            <input type="number" id="exerciseTime" />
+        </div>
+        <div class="setupContainer_mini">
+            <p>Amount of time between rounds</p>
+            <input type="number" id="roundRestTime" />
+        </div>
+    </div>
+    <div id="listContainer">
+        <p>Exercises</p>
+        <ul></ul>
+    </div>
+</body>
+
+</html>
