@@ -1,27 +1,31 @@
-//Requires
+//REQUIRES
 const electron = require("electron");
 const { ipcRenderer } = electron;
 
-//General Variables
+//GGENERAL VARIABLES
 let exercisesArray = [];
 let amountOfExercisesAndRestsLeft = 0;
-let amountOfRounds;
-let exerciseTime;
-//General QuerySelectors
+let amountOfRounds = 0;
+let exerciseTime = 0;
+let pause = false;
+//GENERAL QUERYSELECTORS
 const ul = document.querySelector("ul");
-const startTimer = document.querySelector("#startTimer"); //Start button
+const startTimer = document.querySelector("#startTimer");
 const stopTimer = document.querySelector("#stopTimer");
-const timerInput = document.querySelector("#timerInput"); //Input
-let timeinterval; //TimeInterval-Variable
+const pauseTimer = document.querySelector("#pauseTimer");
+const timerInput = document.querySelector("#timerInput");
+const roundRestTime = document.querySelector("#roundRestTime");
+
+let timeinterval;
 let count = 0;
-let roundRestTime = document.querySelector("#roundRestTime").value; //Ska nog göras om till General Variable
-//EventListeners
+//EVENTLISTENERS
 startTimer.addEventListener("click", startTimerFunc)
 stopTimer.addEventListener("click", stopTimerFunc);
+pauseTimer.addEventListener("click", pauseTimerFunc);
+//IPCRENDERS
 //ipcRenderer to handle to sending of the exercise-array from the addWindow.
 ipcRenderer.on("exercise:add", function (e, exercises) {
     exercisesArray = exercises;
-    amountOfExercisesAndRestsLeft = exercises.length;
     for (let i = 0; i < exercises.length; i++) {
         let li = document.createElement("li");
         li.setAttribute("id", exercises[i].name)
@@ -42,26 +46,28 @@ function removeItem(e) {
     e.target.remove();
     console.log(exercisesArray)
 }
-//Functions
+//FUNCTIONS
 function startClock() {
     console.log(amountOfRounds);
-    if (amountOfRounds > 0) {
-        if (count === 0 && exercisesArray[amountOfExercisesAndRestsLeft - 1].type === "REST") {
-            amountOfExercisesAndRestsLeft--;
-            handleRestTime();
-        }
-        else {
+    if (pause !== true) {
+        if (amountOfExercisesAndRestsLeft > 0) {
             if (count === 0) {
                 amountOfExercisesAndRestsLeft--;
-                amountOfRounds--;
-                exerciseTime = document.querySelector("#exerciseTime").value;
-                count = exerciseTime;
+                if (exercisesArray[amountOfExercisesAndRestsLeft].type === "REST") {
+                    handleRestTime();
+                }
+                else {
+                    exerciseTime = document.querySelector("#exerciseTime").value;
+                    count = exerciseTime;
+                }
             }
-            handleExercise();
+            else {
+                handleExercise();
+            }
         }
-    }
-    else {
-        stopTimerFunc();
+        else if (amountOfExercisesAndRestsLeft === 0) {
+            addAndEvaluateRounds();
+        }
     }
 }
 function handleExercise() {
@@ -77,12 +83,29 @@ function handleRestTime() {
 function startTimerFunc() {
     exerciseTime = document.querySelector("#exerciseTime").value;
     count = exerciseTime;
-    amountOfRounds = document.querySelector("#rounds").value;
-    timeinterval = setInterval(startClock, 1000);
+    if (amountOfRounds === 0) {
+        amountOfRounds = document.querySelector("#rounds").value;
+    }
+    if (exercisesArray.length > 0) {
+        amountOfExercisesAndRestsLeft = exercisesArray.length;
+        timeinterval = setInterval(startClock, 1000);
+    }
 }
 function stopTimerFunc() {
     clearInterval(timeinterval);
 }
+function pauseTimerFunc() {
+    pause = !pause;
+}
 
+function addAndEvaluateRounds() {
+    amountOfRounds--;
+    if (amountOfRounds > 0) {
+        clearInterval(timeinterval);
+        startTimerFunc();
+    }
+    else if (amountOfRounds === 0) {
+        clearInterval(timeinterval);
+    }
+}
 //Solve the pause between every round problem
-//Add Pause-function to the timer? Typ boolean om true så körs intervallen, om false körs den inte. Den loopar ju dock ändå, men det kanske verkar vara bäst.

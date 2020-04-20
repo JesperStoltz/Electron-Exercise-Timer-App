@@ -11,12 +11,17 @@ body {
     background: white;
 }
 
+#buttonContainer{
+    display: flex;
+}
 .buttons {
     height: 115px;
     width: 215px;
     font-size: 40px;
     border: none;
     font-weight: bold;
+    margin-right: 10px;
+    margin-left: 10px;
 }
 
 #startTimer {
