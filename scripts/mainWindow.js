@@ -87,20 +87,8 @@ function handleExerciseTime() {
 function removeAndEvaluateRounds() {
     amountOfRounds--;
     if (amountOfRounds > 0) {
-        if (firstRound) {
             clearInterval(timeinterval);
             startTimerFunc();
-            firstRound = false;
-        }
-        else {
-            clearInterval(timeinterval);
-            count = roundRestTime.value;
-            timerInput.value = count;
-            setTimeout(() => {
-                startTimerFunc();
-            }, parseInt(count) );         
-        }
-
     }
     else if (amountOfRounds === 0) {
         clearInterval(timeinterval);
