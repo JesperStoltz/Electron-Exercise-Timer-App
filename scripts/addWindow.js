@@ -14,26 +14,34 @@ function submitForm(e) {
     if (document.querySelector("#restCheckbox").checked === true) {
         exerciseArray.push({ type: "REST", name: "REST" });
         const li = document.createElement("li");
-        const exerciseName = document.createTextNode(exerciseArray[exerciseArray.length-2].name);
+        const exerciseName = document.createTextNode(exerciseArray[exerciseArray.length - 2].name);
         const li2 = document.createElement("li");
-        const rest = document.createTextNode(exerciseArray[exerciseArray.length-1].name);
+        const rest = document.createTextNode(exerciseArray[exerciseArray.length - 1].name);
         li.appendChild(exerciseName);
         ul.appendChild(li);
         li2.appendChild(rest);
         ul.appendChild(li2);
+
+        //refocus on input:
+        const input = document.querySelector("#exercise");
+        input.focus();
     }
     else if (document.querySelector("#restCheckbox").checked === false) {
         const li = document.createElement("li");
-        const exerciseName = document.createTextNode(exerciseArray[exerciseArray.length-1].name);
+        const exerciseName = document.createTextNode(exerciseArray[exerciseArray.length - 1].name);
         li.appendChild(exerciseName);
         ul.appendChild(li);
+        
+        //refocus on input:
+        const input = document.querySelector("#exercise");
+        input.focus();
     }
     document.querySelector("#exercise").value = "";
 };
 
 const closeAddButton = document.querySelector("#closeAddButton");
 function closeWindow() {
-    if (exerciseArray[exerciseArray.length -1].type === "REST"){
+    if (exerciseArray[exerciseArray.length - 1].type === "REST") {
         exerciseArray.pop();
     }
     ipcRenderer.send("exercise:add", exerciseArray);
